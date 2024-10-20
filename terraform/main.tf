@@ -39,10 +39,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 }
 
 resource "azurerm_role_assignment" "network_contributor" {
-  # DOES NOT WORK -> principal_id = azurerm_kubernetes_cluster.k8s.kubelet_identity[0].object_id
-  # DOES NOT WORK -> principal_id = azurerm_kubernetes_cluster.k8s.identity.0.principal_id
-
-  # principal_id   = azurerm_kubernetes_cluster.k8s.system_assigned_identity[0].principal_id
   principal_id   = azurerm_kubernetes_cluster.k8s.identity[0].principal_id
   role_definition_name = "Network Contributor"
   scope          = azurerm_subnet.kubesubnet.id # You can also use var.subnet_id for subnet-specific roles
