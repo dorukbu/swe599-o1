@@ -1,14 +1,33 @@
-#### Resource Group ####
-resource "azurerm_resource_group" "rg" {
-  location = var.resource_group_location
-  name     = var.resource_group_name_var
+#### Use existing resources ####
+# resource "azurerm_resource_group" "rg" {
+#   location = var.resource_group_location
+#   name     = var.resource_group_name_var
+# }
+
+# # Create public IPs
+# resource "azurerm_public_ip" "my_terraform_public_ip" {
+#   name                = var.public_ip_name
+#   location            = data.azurerm_resource_group.existing_rg.location
+#   resource_group_name = data.azurerm_resource_group.existing_rg.name
+#   allocation_method   = "Dynamic"
+# }
+
+# Reference the existing resource group
+data "azurerm_resource_group" "existing_rg" {
+  name = var.resource_group_name_var
+}
+
+# Reference the existing public IP
+data "azurerm_public_ip" "existing_public_ip" {
+  name                = var.public_ip_name
+  resource_group_name = data.azurerm_resource_group.existing_rg.name
 }
 
 #### AKS ####
 resource "azurerm_kubernetes_cluster" "k8s" {
-  location            = azurerm_resource_group.rg.location
+  location            = data.azurerm_resource_group.existing_rg.location
   name                = var.azurerm_kubernetes_cluster_name
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = data.azurerm_resource_group.existing_rg.name
   dns_prefix          = var.azurerm_kubernetes_cluster_dns_prefix
 
   identity {
@@ -41,7 +60,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 resource "azurerm_role_assignment" "network_contributor" {
   principal_id   = azurerm_kubernetes_cluster.k8s.identity[0].principal_id
   role_definition_name = "Network Contributor"
-  scope          = azurerm_subnet.kubesubnet.id # You can also use var.subnet_id for subnet-specific roles
+  scope          = azurerm_subnet.kubesubnet.id
 }
 
 
@@ -49,8 +68,8 @@ resource "azurerm_role_assignment" "network_contributor" {
 # Create virtual machine
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
   name                  = var.vm_name
-  location              = azurerm_resource_group.rg.location
-  resource_group_name   = azurerm_resource_group.rg.name
+  location              = data.azurerm_resource_group.existing_rg.location
+  resource_group_name   = data.azurerm_resource_group.existing_rg.name
   network_interface_ids = [azurerm_network_interface.my_terraform_nic.id]
   size                  = var.vm_size
 
@@ -79,8 +98,8 @@ resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "my_terraform_nsg" {
   name                = "myNetworkSecurityGroup"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.existing_rg.location
+  resource_group_name = data.azurerm_resource_group.existing_rg.name
 
   security_rule {
     name                       = "SSH"
@@ -134,14 +153,14 @@ resource "azurerm_network_security_group" "my_terraform_nsg" {
 # Create network interface
 resource "azurerm_network_interface" "my_terraform_nic" {
   name                = "myNIC"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.existing_rg.location
+  resource_group_name = data.azurerm_resource_group.existing_rg.name
 
   ip_configuration {
     name                          = "my_nic_configuration"
     subnet_id                     = azurerm_subnet.kubesubnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.my_terraform_public_ip.id
+    public_ip_address_id          = data.azurerm_public_ip.existing_public_ip.id
   }
 }
 
@@ -151,37 +170,17 @@ resource "azurerm_network_interface_security_group_association" "example" {
   network_security_group_id = azurerm_network_security_group.my_terraform_nsg.id
 }
 
-#### Network ####
-# data "azurerm_subnet" "kubesubnet" {
-#   name                 = var.subnet_name
-#   virtual_network_name = azurerm_virtual_network.vnet.name
-#   resource_group_name  = azurerm_resource_group.rg.name
-# }
-
 resource "azurerm_virtual_network" "vnet" {
   name                = var.vnet_name
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.existing_rg.location
+  resource_group_name = data.azurerm_resource_group.existing_rg.name
   address_space       = [var.vnet_cidr]
-
-  # subnet {
-  #   name           = var.subnet_name
-  #   address_prefix = var.subnet_cidr
-  # }
 }
 
 # Create subnet
 resource "azurerm_subnet" "kubesubnet" {
   name                 = var.subnet_name
-  resource_group_name  = azurerm_resource_group.rg.name
+  resource_group_name  = data.azurerm_resource_group.existing_rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = [var.subnet_cidr]
-}
-
-# Create public IPs
-resource "azurerm_public_ip" "my_terraform_public_ip" {
-  name                = var.public_ip_name
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
 }
