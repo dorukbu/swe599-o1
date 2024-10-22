@@ -1,5 +1,9 @@
+output "vm_public_ip_address" {
+  value = data.azurerm_public_ip.existing_public_ip.ip_address
+}
+
 output "resource_group_name" {
-  value = azurerm_resource_group.rg.name
+  value = data.azurerm_resource_group.existing_rg.name
 }
 
 output "kubernetes_cluster_name" {
