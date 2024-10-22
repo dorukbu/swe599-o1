@@ -34,6 +34,28 @@
 ##### *DISCLAIMER: The system is shut down when it is not in operation to reduce cloud costs.
 
 # How to Guide
+Your folder structure should look something like this after step 2:
+```
+.
+├── README.md
+├── k8s
+│   ├── azurek8s
+│   └── manifests
+│       └── aks-store-quickstart-internalip.yaml
+├── ssh_keys
+│   ├── id_rsa
+│   └── id_rsa.pub
+└── terraform
+    ├── main.destroy.tfplan
+    ├── main.tf
+    ├── main.tfplan
+    ├── outputs.tf
+    ├── providers.tf
+    ├── ssh.tf
+    ├── terraform.tfstate
+    ├── terraform.tfstate.backup
+    └── variables.tf
+```
 
 ## 0. Prerequisites
 
@@ -51,7 +73,7 @@
 
 `terraform apply main.tfplan`
 
-## After Creation:
+## 2. After Creation of Cloud Resources:
 
 `resource_group_name=$(terraform output -raw resource_group_name)`
 
@@ -73,7 +95,7 @@
 
 `kubectl get service store-front --watch` -> The service should be able to get external IP defined in LB service annotation
 
-### To Destroy everything
+### 3. Destroy Everything
 
 `kubectl delete -f ./manifests/aks-store-quickstart.yaml` -> Just in case
 
