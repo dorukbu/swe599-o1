@@ -1,0 +1,110 @@
+---
+- name: Install Nginx, Grafana, JMeter, and configure TLS for swe599.o1.dorukbu.com on Ubuntu
+  hosts: "{{ lookup('env', 'vm_public_ip_address') }}" # The environment variable should be set before running the playbook with Terraform output
+  become: true
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx service
+      systemd:
+        name: nginx
+        enabled: yes
+        state: started
+
+    - name: Install Certbot and Nginx plugin
+      apt:
+        name: 
+          - certbot
+          - python3-certbot-nginx
+        state: present
+
+    - name: Create Nginx configuration for swe599.o1.dorukbu.com
+      copy:
+        dest: /etc/nginx/sites-available/swe559-o1-dorukbu.conf
+        content: |
+          server {
+              listen 80;
+              server_name swe599.o1.dorukbu.com;
+
+              location /llm {
+                  proxy_pass http://10.0.1.111;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+
+              # Redirect HTTP to HTTPS
+              location / {
+                  return 301 https://$host$request_uri;
+              }
+          }
+
+    - name: Enable the new Nginx configuration
+      file:
+        src: /etc/nginx/sites-available/swe559-o1-dorukbu.conf
+        dest: /etc/nginx/sites-enabled/swe559-o1-dorukbu.conf
+        state: link
+
+    - name: Remove default Nginx configuration
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Test Nginx configuration
+      command: nginx -t
+
+    - name: Reload Nginx to apply configuration
+      systemd:
+        name: nginx
+        state: reloaded
+
+    - name: Obtain SSL certificate for mydomain.com using Certbot
+      command: certbot --nginx -d swe599.o1.dorukbu.com --non-interactive --agree-tos -m dorukbuyukyildirim@gmail.com
+
+    - name: Test Nginx configuration after Certbot
+      command: nginx -t
+
+    - name: Reload Nginx to apply TLS configuration
+      systemd:
+        name: nginx
+        state: reloaded
+
+    - name: Install required dependencies for Grafana
+      apt:
+        name: apt-transport-https
+        state: present
+
+    - name: Add Grafana GPG key
+      apt_key:
+        url: https://packages.grafana.com/gpg.key
+        state: present
+
+    - name: Add Grafana APT repository
+      apt_repository:
+        repo: deb https://packages.grafana.com/oss/deb stable main
+        state: present
+
+    - name: Install Grafana
+      apt:
+        name: grafana
+        state: present
+
+    - name: Start and enable Grafana service
+      systemd:
+        name: grafana-server
+        enabled: yes
+        state: started
+
+    - name: Install JMeter
+      apt:
+        name: jmeter
+        state: present
