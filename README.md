@@ -12,7 +12,7 @@
 - [x] Add k8s directory to do the following:
   - Deploy a sample app from AKS tutorial
   - Deploy Kubernetes cloud load balancer (internal lb) with custom internal IP (within the subnet CIDR block)
-- [ ] Add system architecture diagram to README
+- [x] Add system architecture diagram to README
 - [ ] Add Ansible directory to take care of provisioning the following tools:
   - Nginx for TLS termination and as a reverse proxy (proxy to UI)
   - net-tools, 
@@ -32,6 +32,9 @@
 #### Current DNS address for the virtual machine (VM)*
 [swe599.o1.dorukbu.com](swe599.o1.dorukbu.com)
 ##### *DISCLAIMER: The system is shut down when it is not in operation to reduce cloud costs.
+
+## Architecture Diagram
+<img src="assets/diagrams/o1_diagram1.jpg" alt="Architecture Diagram" width="700"/>
 
 # How to Guide
 Your folder structure should look something like this after step 2:
