@@ -1,17 +1,3 @@
-#### Use existing resources ####
-# resource "azurerm_resource_group" "rg" {
-#   location = var.resource_group_location
-#   name     = var.resource_group_name_var
-# }
-
-# # Create public IPs
-# resource "azurerm_public_ip" "my_terraform_public_ip" {
-#   name                = var.public_ip_name
-#   location            = data.azurerm_resource_group.existing_rg.location
-#   resource_group_name = data.azurerm_resource_group.existing_rg.name
-#   allocation_method   = "Dynamic"
-# }
-
 # Reference the existing resource group
 data "azurerm_resource_group" "existing_rg" {
   name = var.resource_group_name_var
