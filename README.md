@@ -30,7 +30,7 @@
   - KUBECONFIG setup
 
 #### Current DNS address for the virtual machine (VM)*
-[swe599.o1.dorukbu.com](swe599.o1.dorukbu.com)
+[http://swe599.o1.dorukbu.com](http://swe599.o1.dorukbu.com)
 ##### *DISCLAIMER: The system is shut down when it is not in operation to reduce cloud costs.
 
 ## Architecture Diagram
