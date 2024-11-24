@@ -1,5 +1,5 @@
 ---
-- name: Install Nginx, Grafana, JMeter, and configure TLS for swe599.o1.dorukbu.com on Ubuntu
+- name: Install Nginx, Grafana, JMeter, and configure TLS for swe599.dorukbu.com on Ubuntu
   hosts: "{{ lookup('env', 'vm_public_ip_address') }}" # The environment variable should be set before running the playbook with Terraform output
   become: true
   tasks:
@@ -50,8 +50,8 @@
 
     - name: Enable the new Nginx configuration
       file:
-        src: /etc/nginx/sites-available/swe559-o1-dorukbu.conf
-        dest: /etc/nginx/sites-enabled/swe559-o1-dorukbu.conf
+        src: /etc/nginx/sites-available/swe559-dorukbu.conf
+        dest: /etc/nginx/sites-enabled/swe559-dorukbu.conf
         state: link
 
     - name: Remove default Nginx configuration
@@ -68,7 +68,7 @@
         state: reloaded
 
     - name: Obtain SSL certificate for mydomain.com using Certbot
-      command: certbot --nginx -d swe599.o1.dorukbu.com --non-interactive --agree-tos -m dorukbuyukyildirim@gmail.com
+      command: certbot --nginx -d swe599.dorukbu.com --non-interactive --agree-tos -m dorukbuyukyildirim@gmail.com
 
     - name: Test Nginx configuration after Certbot
       command: nginx -t
