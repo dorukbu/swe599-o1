@@ -25,22 +25,22 @@ output "cluster_ca_certificate" {
   sensitive = true
 }
 
-output "cluster_password" {
-  value     = google_container_cluster.gke_cluster.master_auth[0].password
-  sensitive = true
-}
+# output "cluster_password" {
+#   value     = google_container_cluster.gke_cluster.master_auth[0].password
+#   sensitive = true
+# }
 
-output "cluster_username" {
-  value     = google_container_cluster.gke_cluster.master_auth[0].username
-  sensitive = true
-}
+# output "cluster_username" {
+#   value     = google_container_cluster.gke_cluster.master_auth[0].username
+#   sensitive = true
+# }
 
 output "host" {
   value     = google_container_cluster.gke_cluster.endpoint
   sensitive = true
 }
 
-output "kube_config" {
-  value     = google_container_cluster.gke_cluster.kube_config_raw
-  sensitive = true
-}
+# output "kube_config" {
+#   value     = google_container_cluster.gke_cluster.kube_config_raw
+#   sensitive = true
+# }
