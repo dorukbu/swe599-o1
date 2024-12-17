@@ -50,7 +50,7 @@ resource "google_container_node_pool" "gke_node_pool" {
     machine_type = var.node_vm_size
     disk_size_gb = 20
 
-    preemptible  = true
+    preemptible = true
 
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
     service_account = google_service_account.default.email
@@ -95,7 +95,7 @@ resource "google_compute_instance" "vm" {
     subnetwork = google_compute_subnetwork.subnet.name
 
     access_config {
-      nat_ip = data.google_compute_address.existing_static_ip.address
+      nat_ip       = data.google_compute_address.existing_static_ip.address
       network_tier = "STANDARD" # Match the static IP tie
     }
   }
