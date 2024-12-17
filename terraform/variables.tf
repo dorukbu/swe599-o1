@@ -1,94 +1,71 @@
-#### resource group variables ####
-variable "resource_group_location" {
+variable "project_id" {
+  description = "GCP project ID."
   type        = string
-  default     = "eastus"
-  description = "Location of the resource group."
+  default     = "project-swe599"
 }
 
-variable "resource_group_name_var" {
+variable "region" {
+  description = "GCP region."
   type        = string
-  default     = "rg-swe599-objective-1"
-  description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
+  default     = "us-central1"
 }
 
-#### Network variables ####
-variable "vnet_name" {
+variable "zone" {
+  description = "GCP zone."
   type        = string
-  default     = "vnet-swe599-objective-1"
-  description = "The name of the Virtual Network."
+  default     = "us-central1-a"
 }
 
-variable "vnet_cidr" {
+variable "vpc_name" {
+  description = "The name of the VPC."
   type        = string
-  default     = "10.0.0.0/16"
-  description = "The address space that is used the Virtual Network."
+  default     = "vpc-swe599"
 }
 
 variable "subnet_name" {
-  type        = string
-  default     = "subnet-swe599-objective-1"
   description = "The name of the Subnet."
+  type        = string
+  default     = "subnet-swe599"
 }
 
 variable "subnet_cidr" {
+  description = "The address space that is used for the Subnet."
   type        = string
   default     = "10.0.1.0/24"
-  description = "The address space that is used the Subnet."
 }
 
-variable "public_ip_name" {
+variable "gke_cluster_name" {
+  description = "The name of the GKE cluster."
   type        = string
-  default     = "public-ip-swe599-objective-1"
-  description = "The name of the Public IP."
+  default     = "gke-cluster-swe599"
 }
 
-#### K8s and node pool variables ####
-variable "azurerm_kubernetes_cluster_name" {
+variable "gke_node_pool_name" {
+  description = "The name of the GKE node pool."
   type        = string
-  default     = "cluster-swe599-objective-1"
-  description = "The name of the Kubernetes cluster."
-}
-
-variable "azurerm_kubernetes_cluster_dns_prefix" {
-  type        = string
-  default     = "dns-swe599-objective-1"
-  description = "The DNS prefix to use with the Kubernetes cluster."
+  default     = "gke-node-pool-swe599"
 }
 
 variable "node_vm_size" {
+  description = "The size of the nodes in the GKE cluster."
   type        = string
-  description = "The size of the Virtual Machine."
-  default     = "standard_d2ps_v5"
-}
-
-variable "ssh_key_name" {
-  type        = string
-  description = "The name of the SSH key."
-  default     = "ssh-key-swe599-objective-1"
-
+  default     = "e2-medium"
 }
 
 variable "node_count" {
+  description = "The number of nodes in the GKE cluster."
   type        = number
-  description = "The initial quantity of nodes for the node pool."
   default     = 1
 }
 
-variable "username" {
-  type        = string
-  description = "The admin username for the new cluster."
-  default     = "azureadmin"
-}
-
-#### VM variables ####
 variable "vm_name" {
+  description = "The name of the Compute Engine instance."
   type        = string
-  default     = "vm-swe599-objective-1"
-  description = "The name of the Virtual Machine."
+  default     = "vm-swe599"
 }
 
 variable "vm_size" {
+  description = "The size of the Compute Engine instance."
   type        = string
-  default     = "standard_d2ps_v5"
-  description = "The size of the Virtual Machine."
+  default     = "e2-medium"
 }
