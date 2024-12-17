@@ -1,22 +1,23 @@
 ### TODO
-- [x] Create Resource group and public IP (static) via Azure portal
+- [x] Create Public IP (static) via GCP portal
 - [x] Add Terraform directory to do the following:
   - Create a virtual machine (VM):
     - in a public subnet (will be shared with the k8s cluster).
     - w/ public ssh key found under ./swe599-o1/ssh_keys/ (Prequisite)
-    - w/ the preexisting public IP assigned
+    - w/ the preexisting public IP obtained.
   - Set up a Kubernetes cluster within the same subnet as the VM
   - Other required & compementary components (e.g. Virtual Network, Service Principal role assignments, Network Security Group)
   - Output important information to be utilized in further steps (kubeconfig, public ip etc.)
 - [x] Create a Type A DNS record for the public IP assigned to the vm
 - [x] Add k8s directory to do the following:
-  - Deploy a sample app from AKS tutorial
-  - Deploy Kubernetes cloud load balancer (internal lb) with custom internal IP (within the subnet CIDR block)
+  - Deploy a sample app from GKS tutorial
 - [x] Add system architecture diagram to README
+- [ ] Deploy Kubernetes cloud load balancer (internal lb) with custom internal IP (within the subnet CIDR block)
 - [ ] Add Ansible directory to take care of provisioning the following tools:
-  - Nginx for TLS termination and as a reverse proxy (proxy to UI)
-  - net-tools, 
-  - Deploy a simple UI to interact with the kuberntes load balancer
+  - Nginx for TLS termination and as a reverse proxy
+  - net-tools, certbot
+  - Create and setup a TLS certificate via certbot
+  - Deploy a simple UI to interact with the kuberntes load balancer (Optional)
   - Grafana to monitor Kubernetes
   - JMeter to conduct tests
 - [ ] Write kubernetes manifests:
@@ -25,6 +26,8 @@
   - Internal load balancer (with private ip 10.0.1.111)
   - Prometheus sidecar 
 - [ ] Create a Bash entrypoint script to:
+  - Check if gcloud cli tool is installed -> prompt to install if not installed
+  - Check if gke-gcloud-auth-plugin is installed
   - generate the SSH key pair in the directory ./swe599-o1/ssh_keys/
   - automate the processes of resource creation, provisioning, deployment, destruction
   - KUBECONFIG setup
@@ -62,7 +65,7 @@ Your folder structure should look something like this after step 2:
 
 ## 0. Prerequisites
 
-- **Azure Resource Group**: Ensure that a Resource Group is created in an available Azure region. The name of this Resource Group should match the value of `var.resource_group_name_var` (e.g., `rg-swe599-objective-1`).
+- **GCP Resource Group**: Ensure that a Resource Group is created in an available GCP region. The name of this Resource Group should match the value of `var.resource_group_name_var` (e.g., `rg-swe599-objective-1`).
 
 - **Public IP**: A Public IP address must be provisioned in the same region. Its name should match the value of `var.public_ip_name` (e.g., `public-ip-swe599-objective-1`).
 
