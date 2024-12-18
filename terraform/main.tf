@@ -62,13 +62,15 @@ resource "google_container_node_pool" "gke_node_pool" {
       "ssh-keys" = "gcpadmin:${file("../ssh_keys/id_rsa.pub")}"
     }
 
-    # guest_accelerator {
-    #   type  = "nvidia-tesla-t4"
-    #   count = 1
-    #   gpu_driver_installation_config {
-    #     gpu_driver_version = "LATEST"
-    #   }
-    # }
+    guest_accelerator {
+      type  = var.gpu_type
+      count = var.gpu_count
+
+      # GPU driver installation config -> Do not install if using Nvida GPU Operator
+      # gpu_driver_installation_config {
+      #   gpu_driver_version = "LATEST"
+      # }
+    }
   }
 }
 
