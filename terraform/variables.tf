@@ -49,11 +49,24 @@ variable "gke_node_pool_name" {
 variable "node_vm_size" {
   description = "The size of the nodes in the GKE cluster."
   type        = string
-  default     = "e2-medium"
+  default     = "n1-standard-4"
 }
 
 variable "node_count" {
   description = "The number of nodes in the GKE cluster."
+  type        = number
+  default     = 1
+}
+
+# Some GPU types might not be available in all regions. "Error: NodePool was created in the error state"
+variable "gpu_type" {
+  description = "The type of the GPU."
+  type        = string
+  default     = "nvidia-tesla-t4"
+}
+
+variable "gpu_count" {
+  description = "The number of GPUs."
   type        = number
   default     = 1
 }

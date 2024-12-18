@@ -65,13 +65,16 @@ Your folder structure should look something like this after step 2:
 
 ## 0. Prerequisites
 
-- **GCP Resource Group**: Ensure that a Resource Group is created in an available GCP region. The name of this Resource Group should match the value of `var.resource_group_name_var` (e.g., `rg-swe599-objective-1`).
-
 - **Public IP**: A Public IP address must be provisioned in the same region. Its name should match the value of `var.public_ip_name` (e.g., `public-ip-swe599-objective-1`).
 
 - **RSA SSH Key Pair**: An RSA SSH key pair is required and must be placed under `./swe599-o1/ssh_keys/`.
+## 0. GCP Setup
+Check if you are logged in with Google Cloud Platform CLI tool
+`gcloud auth list`
 
 ## 1. Terraform Commands
+
+export TF_LOG=DEBUG
 
 `terraform init -upgrade`
 
@@ -81,30 +84,35 @@ Your folder structure should look something like this after step 2:
 
 ## 2. After Creation of Cloud Resources:
 
-`resource_group_name=$(terraform output -raw resource_group_name)`
+`gcloud container clusters get-credentials gke-cluster-swe599 --region=us-central1-a`
 
-`az aks list --resource-group $resource_group_name --query "[].{\"K8s cluster name\":name}" --output table`
+`kubectl config view`
 
-`echo "$(terraform output kube_config)" > ../k8s/azurek8s`
+`kubectl config current-context`
 
-`cd ../k8s`
+`kubectl apply -f ilb-deployment.yaml`
 
-`cat ./azurek8s` → delete lines w/ EOF if exists
+`kubectl apply -f ilb-svc.yaml`
 
-`export KUBECONFIG=./azurek8s`
-
-`kubectl get nodes`
-
-`kubectl apply -f ./manifests/aks-store-quickstart.yaml`
-
-`kubectl get pods`
-
-`kubectl get service store-front --watch` -> The service should be able to get external IP defined in LB service annotation
+`ssh -i id_rsa gcpadmin@swe599.dorukbu.com`
 
 ### 3. Destroy Everything
 
-`kubectl delete -f ./manifests/aks-store-quickstart.yaml` -> Just in case
+`kubectl delete -f gke-ilb-svc.yaml` -> Just in case
+
+`kubectl delete -f gke-ilb-deployment.yaml` -> Just in case
 
 `terraform plan -destroy -out main.destroy.tfplan`
 
 `terraform apply main.destroy.tfplan`
+
+### 4. Debugging
+
+gcloud compute accelerator-types list --zones=us-central1-a
+
+gcloud compute regions describe us-central1 --format="yaml(quotas)"
+
+gcloud compute regions describe us-central1 --format="yaml(quotas)" | grep -i -C 1 nvidia_t4
+=======
+`terraform apply main.destroy.tfplan`
+
