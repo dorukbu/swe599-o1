@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-deployment
+  labels:
+    app: ollama-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ollama-app
+  template:
+    metadata:
+      labels:
+        app: ollama-app
+    spec:
+      containers:
+      - name: ollama-container
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "ollama run llama3.2:1b"]
+        # volumeMounts:
+        # - mountPath: /root/.ollama
+        #   name: ollama-data
+        # command: ["/bin/sh", "-c"]
+        # args:
+        # - "ollama run llama3.2:1b"
+        # livenessProbe:
+        #   exec:
+        #     command:
+        #     - "sh"
+        #     - "-c"
+        #     - "ps aux | grep -q 'ollama run llama3.2'"  # Example command to check if the process is running
+        #   initialDelaySeconds: 90  # Wait for 60 seconds before starting health checks
+        #   periodSeconds: 10  # Health check interval
+#       volumes:
+#       - name: ollama-data
+#         persistentVolumeClaim:
+#           claimName: ollama-pvc
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: ollama-pvc
+# spec:
+#   accessModes:
+#   - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 5Gi

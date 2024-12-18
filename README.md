@@ -94,7 +94,7 @@ export TF_LOG=DEBUG
 
 `kubectl apply -f ilb-svc.yaml`
 
-`ssh -i id_rsa gcpadmin@swe599.dorukbu.com`
+`ssh -o StrictHostKeyChecking=no -i id_rsa gcpadmin@swe599.dorukbu.com`
 
 ### 3. Destroy Everything
 
@@ -108,11 +108,8 @@ export TF_LOG=DEBUG
 
 ### 4. Debugging
 
-gcloud compute accelerator-types list --zones=us-central1-a
+gcloud compute accelerator-types list --filter us-central1-a
 
 gcloud compute regions describe us-central1 --format="yaml(quotas)"
 
 gcloud compute regions describe us-central1 --format="yaml(quotas)" | grep -i -C 1 nvidia_t4
-=======
-`terraform apply main.destroy.tfplan`
-
