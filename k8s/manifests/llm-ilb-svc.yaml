@@ -13,5 +13,5 @@ spec:
   ports:
   - name: tcp-port
     protocol: TCP
-    port: 80
+    port: 8080
     targetPort: 11434

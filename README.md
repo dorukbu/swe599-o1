@@ -12,7 +12,7 @@
 - [x] Add k8s directory to do the following:
   - Deploy a sample app from GKS tutorial
 - [x] Add system architecture diagram to README
-- [ ] Deploy Kubernetes cloud load balancer (internal lb) with custom internal IP (within the subnet CIDR block)
+- [x] Deploy Kubernetes cloud load balancer (internal lb) with custom internal IP (within the subnet CIDR block)
 - [ ] Add Ansible directory to take care of provisioning the following tools:
   - Nginx for TLS termination and as a reverse proxy
   - net-tools, certbot
