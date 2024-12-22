@@ -1,16 +1,12 @@
 ---
-# extra vars:
+# extra vars (provided in inventory file):
 #   - required: domain_name: Your domain name (e.g., example.com)
 #   - required: email_address: Your email address for Let's Encrypt notifications
 #   - optional: auto_create_cert: true if you want to automatically create a Let's Encrypt certificate
-# sample command: ansible-playbook playbook.yaml -e domain_name=do
 
-- name: Install Nginx, Grafana, JMeter, and configure TLS for your domain name on Ubuntu
+- name: Install Nginx, deploy frontend application, and configure TLS for your domain name on Ubuntu
   hosts: gatewayserver
   become: true
-  # vars:
-  #   ansible_user: ansible_user  # The user for SSH
-  #   ansible_ssh_private_key_file: "../ssh_keys/id_rsa"  # Specify your SSH private key path here
 
   tasks:
 
