@@ -58,7 +58,8 @@ variable "node_count" {
   default     = 1
 }
 
-# Some GPU types might not be available in all regions. "Error: NodePool was created in the error state"
+# Some GPU types might not be available in all regions. "Error: NodePool was created in the error state" gcloud compute accelerator-types list --zones=us-central1-a
+
 variable "gpu_type" {
   description = "The type of the GPU."
   type        = string

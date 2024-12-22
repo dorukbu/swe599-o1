@@ -39,3 +39,11 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore TLS certificate directory
+tls-cert/
