@@ -15,43 +15,43 @@ spec:
       nodeSelector:
         accelerator: cpu
       volumes:
-      - name: cache-volume
-        persistentVolumeClaim:
-          claimName: mistral-7b
+      # - name: cache-volume
+      #   persistentVolumeClaim:
+      #     claimName: llama-3.2-1b
       # vLLM needs to access the host's shared memory for tensor parallel inference.
-      - name: shm
-        emptyDir:
-          medium: Memory
-          sizeLimit: "2Gi"
+      # - name: shm
+      #   emptyDir:
+      #     medium: Memory
+      #     sizeLimit: "1Gi"
       containers:
-      - name: mistral-7b
-        image: vllm/vllm-openai:latest
+      - name: llama-3-2-1b
+        image: openeuler/vllm-cpu:0.6.3-oe2403lts
         command: ["/bin/sh", "-c"]
         args: [
-          "vllm serve mistralai/Mistral-7B-Instruct-v0.3 --trust-remote-code --enable-chunked-prefill --max_num_batched_tokens 1024"
+          "vllm serve meta-llama/Llama-3.2-1B -device=cpu -tp=2 --distributed-executor-backend mp"
         ]
-        # env:
-        # - name: HUGGING_FACE_HUB_TOKEN
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: hf-token-secret
-        #       key: token
+        env:
+        - name: HUGGING_FACE_HUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-token-secret
+              key: token
         ports:
         - containerPort: 8000
         resources:
           limits:
-            cpu: "10"
-            memory: 20G
-            nvidia.com/gpu: "1"
-          requests:
             cpu: "2"
-            memory: 6G
-            nvidia.com/gpu: "1"
-        volumeMounts:
+            memory: 8G
+            # nvidia.com/gpu: "1"
+          requests:
+            cpu: "800m"
+            memory: 5G
+            # nvidia.com/gpu: "1"
+        # volumeMounts:
         # - mountPath: /root/.cache/huggingface
         #   name: cache-volume
-        - name: shm
-          mountPath: /dev/shm
+        # - name: shm
+        #   mountPath: /dev/shm
         livenessProbe:
           httpGet:
             path: /health
