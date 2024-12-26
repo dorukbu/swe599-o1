@@ -25,53 +25,74 @@ resource "google_service_account" "default" {
   display_name = "Custom Service Account"
 }
 
-# # GKE Cluster
-# resource "google_container_cluster" "gke_cluster" {
-#   name     = var.gke_cluster_name
-#   location = var.zone
+# GKE Cluster
+resource "google_container_cluster" "gke_cluster" {
+  name     = var.gke_cluster_name
+  location = var.zone
 
-#   network    = google_compute_network.vpc.id
-#   subnetwork = google_compute_subnetwork.subnet.id
+  network    = google_compute_network.vpc.id
+  subnetwork = google_compute_subnetwork.subnet.id
 
-#   remove_default_node_pool = true
-#   initial_node_count       = 1
+  remove_default_node_pool = true
+  initial_node_count       = 1
 
-#   deletion_protection = false
-# }
+  deletion_protection = false
 
-# # GKE Node Pool
-# resource "google_container_node_pool" "gke_node_pool" {
-#   name       = var.gke_node_pool_name
+  enable_tpu = true
+}
+
+# GKE CPU Node Pool
+resource "google_container_node_pool" "gke_cpu_node_pool" {
+  name       = var.gke_cpu_node_pool_name
+  cluster    = google_container_cluster.gke_cluster.name
+  location   = var.zone
+  node_count = var.node_count
+
+  node_config {
+
+    # Add node labels here
+    labels = {
+      accelerator = "cpu"
+    }
+
+    machine_type = var.node_vm_size
+    disk_size_gb = 50
+
+    preemptible = true
+
+    # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
+    service_account = google_service_account.default.email
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform",
+    ]
+
+    metadata = {
+      "ssh-keys" = "gcpadmin:${file("../ssh_keys/id_rsa.pub")}"
+    }
+
+    # Accelerators (GPUs)
+    # guest_accelerator {
+    #   type  = var.gpu_type
+    #   count = var.gpu_count
+
+    #   # GPU driver installation config -> Do not install if using Nvida GPU Operator
+    #   gpu_driver_installation_config {
+    #     gpu_driver_version = "LATEST"
+    #   }
+    # }
+  }
+}
+
+# # GKE TPU Node Pool - Check for quota limits
+# resource "google_container_node_pool" "gke_tpu_node_pool" {
+#   name       = var.gke_tpu_node_pool_name
 #   cluster    = google_container_cluster.gke_cluster.name
 #   location   = var.zone
 #   node_count = var.node_count
 
 #   node_config {
-#     machine_type = var.node_vm_size
-#     disk_size_gb = 20
-
-#     preemptible = true
-
-#     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
-#     service_account = google_service_account.default.email
-#     oauth_scopes = [
-#       "https://www.googleapis.com/auth/cloud-platform",
-#     ]
-
-#     metadata = {
-#       "ssh-keys" = "gcpadmin:${file("../ssh_keys/id_rsa.pub")}"
-#     }
-
-#     # Accelerators (GPUs)
-#     # guest_accelerator {
-#     #   type  = var.gpu_type
-#     #   count = var.gpu_count
-
-#     #   # GPU driver installation config -> Do not install if using Nvida GPU Operator
-#     #   gpu_driver_installation_config {
-#     #     gpu_driver_version = "LATEST"
-#     #   }
-#     # }
+#     machine_type = "ct5l-hightpu-1t"
+#     spot = true
 #   }
 # }
 

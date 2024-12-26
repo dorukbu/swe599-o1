@@ -40,11 +40,29 @@ variable "gke_cluster_name" {
   default     = "gke-cluster-swe599"
 }
 
-variable "gke_node_pool_name" {
-  description = "The name of the GKE node pool."
+variable "gke_cpu_node_pool_name" {
+  description = "The name of the GKE cpu node pool."
   type        = string
-  default     = "gke-node-pool-swe599"
+  default     = "gke-cpu-node-pool-swe599"
 }
+
+variable "gke_tpu_node_pool_name" {
+  description = "The name of the GKE tpu node pool."
+  type        = string
+  default     = "gke-tpu-node-pool-swe599"
+}
+
+# variable "tpu_type" {
+#   description = "The type of the TPU."
+#   type        = string
+#   default     = "ct5lp"
+# }
+
+# variable "tpu_count" {
+#   description = "The number of TPUs."
+#   type        = number
+#   default     = 1
+# }
 
 variable "node_vm_size" {
   description = "The size of the nodes in the GKE cluster."

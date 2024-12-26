@@ -6,26 +6,24 @@ output "project_id" {
   value = var.project_id
 }
 
-#UNCOMMENT THE LINES BELOW
-# output "kubernetes_cluster_name" {
-#   value = google_container_cluster.gke_cluster.name
-# }
+output "kubernetes_cluster_name" {
+  value = google_container_cluster.gke_cluster.name
+}
 
-# output "client_certificate" {
-#   value     = google_container_cluster.gke_cluster.master_auth[0].client_certificate
-#   sensitive = true
-# }
+output "client_certificate" {
+  value     = google_container_cluster.gke_cluster.master_auth[0].client_certificate
+  sensitive = true
+}
 
-# output "client_key" {
-#   value     = google_container_cluster.gke_cluster.master_auth[0].client_key
-#   sensitive = true
-# }
+output "client_key" {
+  value     = google_container_cluster.gke_cluster.master_auth[0].client_key
+  sensitive = true
+}
 
-# output "cluster_ca_certificate" {
-#   value     = google_container_cluster.gke_cluster.master_auth[0].cluster_ca_certificate
-#   sensitive = true
-# }
-# UNCOMMENT THE LINES ABOVE
+output "cluster_ca_certificate" {
+  value     = google_container_cluster.gke_cluster.master_auth[0].cluster_ca_certificate
+  sensitive = true
+}
 
 # output "cluster_password" {
 #   value     = google_container_cluster.gke_cluster.master_auth[0].password
@@ -37,12 +35,10 @@ output "project_id" {
 #   sensitive = true
 # }
 
-# UNCOMMENT THE LINES BELOW
-# output "host" {
-#   value     = google_container_cluster.gke_cluster.endpoint
-#   sensitive = true
-# }
-# UNCOMMENT THE LINES ABOVE
+output "host" {
+  value     = google_container_cluster.gke_cluster.endpoint
+  sensitive = true
+}
 
 # output "kube_config" {
 #   value     = google_container_cluster.gke_cluster.kube_config_raw

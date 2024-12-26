@@ -108,8 +108,13 @@ export TF_LOG=DEBUG
 
 ### 4. Debugging
 
-gcloud compute accelerator-types list --filter us-central1-a
+Check if the accelerator type (GPU, TPU) is available in your region. 
+`gcloud compute accelerator-types list --filter us-central1-a`
 
-gcloud compute regions describe us-central1 --format="yaml(quotas)"
+`gcloud compute regions describe us-central1 --format="yaml(quotas)`
 
-gcloud compute regions describe us-central1 --format="yaml(quotas)" | grep -i -C 1 nvidia_t4
+`gcloud compute regions describe us-central1 --format="yaml(quotas)" | grep -i -C 1 nvidia_t4`
+
+`gcloud compute machine-types list --zones=us-central1-a`
+
+`gcloud container node-pools describe gke-tpu-node-pool-swe599 --cluster=gke-cluster-swe599 --zone=us-central1-a`
