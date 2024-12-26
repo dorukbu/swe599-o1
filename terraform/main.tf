@@ -83,18 +83,18 @@ resource "google_container_node_pool" "gke_cpu_node_pool" {
   }
 }
 
-# GKE TPU Node Pool - Check for quota limits
-resource "google_container_node_pool" "gke_tpu_node_pool" {
-  name       = var.gke_tpu_node_pool_name
-  cluster    = google_container_cluster.gke_cluster.name
-  location   = var.zone
-  node_count = var.node_count
+# # GKE TPU Node Pool - Check for quota limits
+# resource "google_container_node_pool" "gke_tpu_node_pool" {
+#   name       = var.gke_tpu_node_pool_name
+#   cluster    = google_container_cluster.gke_cluster.name
+#   location   = var.zone
+#   node_count = var.node_count
 
-  node_config {
-    machine_type = "ct5l-hightpu-1t"
-    spot = true
-  }
-}
+#   node_config {
+#     machine_type = "ct5l-hightpu-1t"
+#     spot = true
+#   }
+# }
 
 # Existing Static IP Address
 data "google_compute_address" "existing_static_ip" {
