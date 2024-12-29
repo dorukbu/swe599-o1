@@ -39,11 +39,13 @@ resource "google_container_cluster" "gke_cluster" {
   initial_node_count       = 1
 
   deletion_protection = false
+  enable_tpu = true
 }
 
-# GKE Node Pool
-resource "google_container_node_pool" "gke_node_pool" {
-  name       = var.gke_node_pool_name
+# GKE CPU Node Pool
+resource "google_container_node_pool" "gke_cpu_node_pool" {
+  name       = var.gke_cpu_node_pool_name
+
   cluster    = google_container_cluster.gke_cluster.name
   location   = var.zone
   node_count = var.node_count
@@ -52,11 +54,11 @@ resource "google_container_node_pool" "gke_node_pool" {
     machine_type = var.node_vm_size
     disk_size_gb = var.node_disk_size_gb
 
+
     # Add node labels here
     labels = {
       accelerator = "cpu"
     }
-
     preemptible = true
 
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
@@ -81,6 +83,19 @@ resource "google_container_node_pool" "gke_node_pool" {
     # }
   }
 }
+
+# # GKE TPU Node Pool - Check for quota limits
+# resource "google_container_node_pool" "gke_tpu_node_pool" {
+#   name       = var.gke_tpu_node_pool_name
+#   cluster    = google_container_cluster.gke_cluster.name
+#   location   = var.zone
+#   node_count = var.node_count
+
+#   node_config {
+#     machine_type = "ct5l-hightpu-1t"
+#     spot = true
+#   }
+# }
 
 # Existing Static IP Address
 data "google_compute_address" "existing_static_ip" {
