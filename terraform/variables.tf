@@ -67,13 +67,19 @@ variable "gke_tpu_node_pool_name" {
 variable "node_vm_size" {
   description = "The size of the nodes in the GKE cluster."
   type        = string
-  default     = "n1-standard-4"
+  default     = "n2-highmem-8"
 }
 
 variable "node_count" {
   description = "The number of nodes in the GKE cluster."
   type        = number
   default     = 1
+}
+
+variable "node_disk_size_gb" {
+  description = "The size of the disk in the nodes of the GKE cluster."
+  type        = number
+  default     = 80
 }
 
 # Some GPU types might not be available in all regions. "Error: NodePool was created in the error state" gcloud compute accelerator-types list --zones=us-central1-a

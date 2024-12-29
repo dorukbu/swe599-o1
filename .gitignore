@@ -76,6 +76,7 @@ coverage
 build
 
 # misc
+llm-tests
 .DS_Store
 .env.local
 .env.development.local

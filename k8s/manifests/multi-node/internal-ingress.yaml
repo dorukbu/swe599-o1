@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ilb-demo-ingress
+  namespace: default
+  annotations:
+    # kubernetes.io/ingress.regional-static-ip-name: "10.0.1.111"
+    kubernetes.io/ingress.class: "gce-internal"
+spec:
+  defaultBackend:
+    service:
+      name: cpu-llm-app-svc
+      port:
+        number: 8080

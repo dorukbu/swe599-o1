@@ -90,6 +90,9 @@ export TF_LOG=DEBUG
 
 `kubectl config current-context`
 
+`kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml`
+
+
 `kubectl apply -f ilb-deployment.yaml`
 
 `kubectl apply -f ilb-svc.yaml`

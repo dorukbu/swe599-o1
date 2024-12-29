@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpu-llm-app-svc
+  namespace: default
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  selector:
+    app: cpu-llm-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8000

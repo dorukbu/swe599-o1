@@ -17,6 +17,8 @@ resource "google_compute_subnetwork" "subnet" {
   ip_cidr_range = var.subnet_cidr
   region        = var.region
   network       = google_compute_network.vpc.name
+  purpose       = "REGIONAL_MANAGED_PROXY" # purpose and role required for proxy-only subnet & internal static ip ingress
+  role          = "ACTIVE"
 }
 
 # Service Account
@@ -37,27 +39,26 @@ resource "google_container_cluster" "gke_cluster" {
   initial_node_count       = 1
 
   deletion_protection = false
-
   enable_tpu = true
 }
 
 # GKE CPU Node Pool
 resource "google_container_node_pool" "gke_cpu_node_pool" {
   name       = var.gke_cpu_node_pool_name
+
   cluster    = google_container_cluster.gke_cluster.name
   location   = var.zone
   node_count = var.node_count
 
   node_config {
+    machine_type = var.node_vm_size
+    disk_size_gb = var.node_disk_size_gb
+
 
     # Add node labels here
     labels = {
       accelerator = "cpu"
     }
-
-    machine_type = var.node_vm_size
-    disk_size_gb = 50
-
     preemptible = true
 
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
