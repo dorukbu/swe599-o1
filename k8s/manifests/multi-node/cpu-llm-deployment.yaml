@@ -25,12 +25,14 @@ spec:
       #     sizeLimit: "1Gi"
       containers:
       - name: llama-3-2-1b
-        image: openeuler/vllm-cpu:0.6.3-oe2403lts
+        image: dorukbu/vllm-cpu:latest
         command: ["/bin/sh", "-c"]
         args: [
-          "vllm serve meta-llama/Llama-3.2-1B -device=cpu -tp=2 --distributed-executor-backend mp"
+          "vllm serve meta-llama/Llama-3.2-11B-Vision-Instruct --max-model-len=78640" # Reduce model size to fit in memory
         ]
         env:
+        - name: VLLM_CPU_KVCACHE_SPACE
+          value: "22"
         - name: HUGGING_FACE_HUB_TOKEN
           valueFrom:
             secretKeyRef:
@@ -40,27 +42,34 @@ spec:
         - containerPort: 8000
         resources:
           limits:
-            cpu: "2"
-            memory: 8G
+            cpu: "7800m"
+            memory: 57G
             # nvidia.com/gpu: "1"
           requests:
-            cpu: "800m"
-            memory: 5G
+            cpu: "4"
+            memory: 48G
+        # readinessProbe:
+        #   httpGet:
+        #     path: /  # or any path that responds with a 200 OK status when the app is ready
+        #     port: 8000
+          # initialDelaySeconds: 20
+          # periodSeconds: 10
+          # failureThreshold: 600
             # nvidia.com/gpu: "1"
         # volumeMounts:
         # - mountPath: /root/.cache/huggingface
         #   name: cache-volume
         # - name: shm
         #   mountPath: /dev/shm
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 60
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 60
-          periodSeconds: 5
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 8000
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 10
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 8000
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 5

@@ -9,9 +9,9 @@ spec:
   # externalTrafficPolicy: Cluster
   loadBalancerIP: 10.0.1.111
   selector:
-    app: cpu-llm-app
+    app: ingress-controller
   ports:
   - name: tcp-port
     protocol: TCP
     port: 8080
-    targetPort: 8000
+    targetPort: 80

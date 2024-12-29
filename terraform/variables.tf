@@ -49,7 +49,7 @@ variable "gke_node_pool_name" {
 variable "node_vm_size" {
   description = "The size of the nodes in the GKE cluster."
   type        = string
-  default     = "n1-standard-4"
+  default     = "n2-highmem-8"
 }
 
 variable "node_count" {
